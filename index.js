@@ -1,12 +1,14 @@
 const  express = require('express')
 const userrouter = require('./Routes/user')
+const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-const { PrismaClient } = require('@prisma/client');
+const loggedRouter = require('./Routes/upload');
 const app = express()
 const PORT =3000
-const prisma = new PrismaClient();
 app.use(bodyParser.json());
-app.use('/',userrouter)
+app.use(cookieParser());
+app.use('/user',userrouter)
+app.use('/loggedin',loggedRouter)
 
 
 app.listen(PORT,()=>{

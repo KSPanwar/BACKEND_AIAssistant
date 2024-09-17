@@ -4,7 +4,7 @@ async function userValidation(req,res,next){
     const { email, password } = req.body;
     if (!email || !password) {
         return res.status(400).send({
-            message: "Name and email are required"
+            message: "Name and password are required"
         });
     }
     try {
@@ -14,7 +14,7 @@ async function userValidation(req,res,next){
         });
 
         if (user) {
-            res.json({ message: "User exists", user });
+            req.user = user
             next()
         } else {
             res.status(404).send({ message: "User not found" });
