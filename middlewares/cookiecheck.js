@@ -10,11 +10,11 @@ function authenticateToken(req, res, next) {
         return res.status(401).send({ message: 'Access denied' });
     }
 
-    jwt.verify(token, config.jwtSecret, (err, user) => {
+    jwt.verify(token, config.config.jwtSecret, (err, user) => {
         if (err) {
             return res.status(403).send({ message: 'Invalid token' });
         }
-
+        console.log('In authenticate token', user)
         req.user = user;
         next();
     });

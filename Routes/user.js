@@ -9,9 +9,10 @@ const config = require("../middlewares/variables");
 const userrouter = Router();
 
 // Route for testing if the server is working
-userrouter.get('/signup', (req, res) => {
-    res.send({ message: "Working" });
+userrouter.get('/', (req, res) => {
+    res.send({ message: "Working in home" });
 });
+
 
 userrouter.get('/protected', authenticateToken, (req, res) => {
     res.send({ message: 'This is a protected route', user: req.user });
@@ -20,9 +21,9 @@ userrouter.get('/protected', authenticateToken, (req, res) => {
 // Route for signing in with userValidation middleware
 userrouter.post('/signin', userValidation, (req, res) => {
     const user = req.user
-    console.log(user)
+    console.log('In signin console' + user.id)
     // Send a response or handle further
-    const token = jwt.sign({ userId: user.id }, config.jwtSecret, { expiresIn: '1h' });
+    const token = jwt.sign({ userId: user.id },config.config.jwtSecret, { expiresIn: '1h' });
     res.cookie('authToken', token, {
         httpOnly: true, // Prevent client-side JavaScript from accessing the cookie
         secure: process.env.NODE_ENV === 'production', // Set to true in production
@@ -33,7 +34,7 @@ userrouter.post('/signin', userValidation, (req, res) => {
 });
 
 // Route for creating a new user
-userrouter.post('/user', async (req, res) => {
+userrouter.post('/signup', async (req, res) => {
     const { name, email } = req.body;
     
     if (!name || !email) {
@@ -42,7 +43,7 @@ userrouter.post('/user', async (req, res) => {
 
     try {
         const newUser = await prisma.user.create({
-            data: { name, email },
+            data: { name, email, password },
         });
         res.json(newUser);
     } catch (error) {

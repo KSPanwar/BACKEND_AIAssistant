@@ -14,7 +14,8 @@ async function userValidation(req,res,next){
         });
 
         if (user) {
-            req.user = user
+            console.log(user)
+            req.user = user  
             next()
         } else {
             res.status(404).send({ message: "User not found" });
